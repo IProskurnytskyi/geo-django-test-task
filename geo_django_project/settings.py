@@ -38,6 +38,9 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "geo_polygon_images.apps.GeoPolygonImagesConfig",
+    "django.contrib.gis"
+    "rest_framework",
+    "geo_polygon_images",
 ]
 
 MIDDLEWARE = [
@@ -76,9 +79,11 @@ WSGI_APPLICATION = "geo_django_project.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+        "ENGINE": "django.contrib.gis.db.backends.postgis",
+        "NAME": "geodjango",
+        "USER": "geo",
+        "PASSWORD": "1234",
+    },
 }
 
 
