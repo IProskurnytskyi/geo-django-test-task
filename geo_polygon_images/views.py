@@ -3,7 +3,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import SatelliteImage
-from .serializers import FieldSerializer
+from .serializers import PolygonSerializer
 
 
 class RetrieveSatelliteImage(APIView):
@@ -11,15 +11,15 @@ class RetrieveSatelliteImage(APIView):
     def post(request) -> Response:
         polygon_data = request.data.get("polygon")
 
-        serializer = FieldSerializer(data={"boundary": polygon_data})
+        serializer = PolygonSerializer(data={"coordinates": polygon_data})
         if not serializer.is_valid():
             return Response(
                 {"errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST
             )
 
-        field = serializer.save()
+        polygon = serializer.save()
 
-        newest_image = SatelliteImage.objects.filter(field=field).order_by("-datetime").first()
+        newest_image = SatelliteImage.objects.filter(polygon=polygon).order_by("-datetime").first()
 
         if newest_image:
             return Response({"image_url": newest_image.image_url}, status=status.HTTP_200_OK)
@@ -32,7 +32,7 @@ class RetrieveSatelliteImage(APIView):
             response.raise_for_status()
             image_url = response.json()["links"][3]["href"]
 
-            SatelliteImage.objects.create(field=field, image_url=image_url)
+            SatelliteImage.objects.create(polygon=polygon, image_url=image_url)
 
             return Response({"image_url": image_url}, status=status.HTTP_200_OK)
 

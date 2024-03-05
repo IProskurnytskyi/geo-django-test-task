@@ -1,10 +1,10 @@
 from rest_framework import serializers
-from .models import Field, SatelliteImage
+from .models import Polygon, SatelliteImage
 
 
-class FieldSerializer(serializers.ModelSerializer):
+class PolygonSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Field
+        model = Polygon
         fields = "__all__"
 
 
