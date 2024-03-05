@@ -38,9 +38,9 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "geo_polygon_images.apps.GeoPolygonImagesConfig",
-    "django.contrib.gis"
+    "rest_framework_gis",
+    "django.contrib.gis",
     "rest_framework",
-    "geo_polygon_images",
 ]
 
 MIDDLEWARE = [
