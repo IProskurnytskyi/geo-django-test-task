@@ -65,11 +65,10 @@ class RetrieveIntersectingFields(APIView):
     def post(self, request) -> Response:
         polygon_data = self.request.data.get("polygon")
 
-        polygon_geometry = GEOSGeometry(polygon_data)
+        polygon_geometry = GEOSGeometry(str(polygon_data))
 
         intersecting_fields = Field.objects.filter(boundary__intersects=polygon_geometry)
 
         serializer = FieldSerializer(intersecting_fields, many=True)
-        serializer.is_valid(raise_exception=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
