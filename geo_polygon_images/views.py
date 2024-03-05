@@ -3,13 +3,12 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import SatelliteImage
-from .serializers import PolygonSerializer
+from .serializers import PolygonSerializer, FieldSerializer
 
 
 class RetrieveSatelliteImage(APIView):
-    @staticmethod
-    def post(request) -> Response:
-        polygon_data = request.data.get("polygon")
+    def post(self, request) -> Response:
+        polygon_data = self.request.data.get("polygon")
 
         serializer = PolygonSerializer(data={"coordinates": polygon_data})
         if not serializer.is_valid():
@@ -41,3 +40,21 @@ class RetrieveSatelliteImage(APIView):
                 {"error": f"Error fetching image: {error}"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+
+class CreateField(APIView):
+    def post(self, request) -> Response:
+        name = self.request.data.get("name")
+        boundary = self.request.data.get("boundary")
+
+        serializer = FieldSerializer(
+            data={
+                "name": name,
+                "boundary": boundary
+            }
+        )
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "Field created successfully."}, status=status.HTTP_201_CREATED)
+        else:
+            return Response({"errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
