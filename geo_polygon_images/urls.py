@@ -1,18 +1,22 @@
 from django.urls import path
 
-from .views import RetrieveSatelliteImage, CreateField
+from .views import RetrieveImage, CreateField, RetrieveIntersectingFields
 
 
 urlpatterns = [
     path(
-        "retrieve-satellite-image/",
-        RetrieveSatelliteImage.as_view(),
-        name="retrieve-satellite-image",
+        "retrieve-image/",
+        RetrieveImage.as_view(),
+        name="retrieve-image",
     ),
     path(
         "create-field/",
         CreateField.as_view(),
-        name="create-field"
+        name="create-field",
+    ),
+    path("retrieve-intersecting-fields/",
+         RetrieveIntersectingFields.as_view(),
+         name="retrieve-intersecting-fields",
     ),
 ]
 

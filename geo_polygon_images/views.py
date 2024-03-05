@@ -1,12 +1,13 @@
 import requests
+from django.contrib.gis.geos.geometry import GEOSGeometry
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import SatelliteImage
+from .models import SatelliteImage, Field
 from .serializers import PolygonSerializer, FieldSerializer
 
 
-class RetrieveSatelliteImage(APIView):
+class RetrieveImage(APIView):
     def post(self, request) -> Response:
         polygon_data = self.request.data.get("polygon")
 
@@ -58,3 +59,17 @@ class CreateField(APIView):
             return Response({"message": "Field created successfully."}, status=status.HTTP_201_CREATED)
         else:
             return Response({"errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class RetrieveIntersectingFields(APIView):
+    def post(self, request) -> Response:
+        polygon_data = self.request.data.get("polygon")
+
+        polygon_geometry = GEOSGeometry(polygon_data)
+
+        intersecting_fields = Field.objects.filter(boundary__intersects=polygon_geometry)
+
+        serializer = FieldSerializer(intersecting_fields, many=True)
+        serializer.is_valid(raise_exception=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)

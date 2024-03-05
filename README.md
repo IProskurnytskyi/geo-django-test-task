@@ -1,6 +1,6 @@
 # geo-django-test-task
 
-### You can retrieve an image from api/retrieve-satellite-image/ using this format:
+### You can retrieve an image from api/retrieve-image/ using this format:
 
 ```shell
 {
